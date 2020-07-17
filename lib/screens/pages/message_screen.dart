@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:pratichabi/constants/strings.dart';
 import 'package:pratichabi/models/message.dart';
 import 'package:pratichabi/models/user.dart';
 import 'package:pratichabi/resources/firebase_repository.dart';
@@ -9,7 +11,9 @@ import 'package:pratichabi/widgets/custom_tile.dart';
 
 class MessageScreen extends StatefulWidget {
   final User reciever;
+
   MessageScreen({this.reciever});
+
   @override
   _MessageScreenState createState() => _MessageScreenState();
 }
@@ -18,9 +22,15 @@ class _MessageScreenState extends State<MessageScreen> {
   
   TextEditingController textFieldController = TextEditingController();
   FirebaseRepository _repository = FirebaseRepository();
+
   User sender;
+
   String _currentUserId;
+
+  FocusNode textFieldFocus = FocusNode();
+
   bool isWriting = false;
+  bool showEmojiPicker = false;
 
   @override
   void initState() {
@@ -28,71 +38,163 @@ class _MessageScreenState extends State<MessageScreen> {
 
     _repository.getCurrentUser().then((user) {
       _currentUserId = user.uid;
+
       setState(() {
         sender = User(
-          uid:user.uid,
-          name:user.displayName,
-          profilePhoto: user.photoUrl
+          uid: user.uid,
+          name: user.displayName,
+          profilePhoto: user.photoUrl,
         );
       });
+    });
+  }
+
+  showKeyboard()=>textFieldFocus.requestFocus();
+  hideKeyboard()=>textFieldFocus.unfocus();
+
+  hideEmojiContainer(){
+    setState(() {
+      showEmojiPicker = false;
+    });
+  }
+
+  showEmojiContainer(){
+    setState(() {
+      showEmojiPicker = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: UniversalVaribales.blackColor,
       appBar: customAppBar(context),
-      body:Column(
+      body: Column(
         children: <Widget>[
-          Flexible(child: 
-            messageList()
+          Flexible(
+            child: messageList(),
           ),
           chatControls(),
+          showEmojiPicker ? Container(child:emojiContainer()):Container()
         ],
-      )
+      ),
     );
   }
 
-  // sendMessageFunction
+  emojiContainer(){
+    return EmojiPicker(
+      bgColor: UniversalVaribales.separatorColor,
+      indicatorColor: UniversalVaribales.blueColor,
+      rows:3,
+      columns:7,
+      onEmojiSelected: (emoji,category){
+          setState(() {
+            isWriting = true;
+          });
 
-  sendMessage(){
-    var text = textFieldController.text;
-
-    Message _message = Message(
-      recieverId:  widget.reciever.uid,
-      senderId : sender.uid,
-      message:text,
-      timestamp: Timestamp.now(),
-      type: 'text'
+          textFieldController.text = textFieldController.text + emoji.emoji;
+      },
     );
-
-    setState(() {
-      isWriting=false;
-    });
-
-    _repository.addMessageToDb(_message,sender,widget.reciever);
   }
 
 
-
-  CustomAppBar customAppBar(context){
-    return CustomAppBar(
-      title: Text(widget.reciever.name), 
-      actions: <Widget>[
-        IconButton(icon: Icon(Icons.video_call), onPressed: null),
-        IconButton(icon: Icon(Icons.phone), onPressed: null)
-        ], 
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back), 
-        onPressed: (){
-        Navigator.pop(context);
-      }), 
-      centerTitle: false);
+  Widget messageList() {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection(MESSAGES_COLLECTION)
+          .document(_currentUserId)
+          .collection(widget.reciever.uid)
+          .orderBy(TIMESTAMP_FIELD, descending: true)
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.data == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return ListView.builder(
+          padding: EdgeInsets.all(10),
+          itemCount: snapshot.data.documents.length,
+          reverse: true,
+          itemBuilder: (context, index) {
+            // mention the arrow syntax if you get the time
+            return chatMessageItem(snapshot.data.documents[index]);
+          },
+        );
+      },
+    );
   }
 
-  Widget chatControls(){
+  Widget chatMessageItem(DocumentSnapshot snapshot) {
+    Message _message = Message.fromMap(snapshot.data);
 
-    setWriting(bool val){
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 15),
+      child: Container(
+        alignment: _message.senderId == _currentUserId
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
+        child: _message.senderId == _currentUserId
+            ? senderLayout(_message)
+            : recieverLayout(_message),
+      ),
+    );
+  }
+
+  Widget senderLayout(Message message) {
+    Radius messageRadius = Radius.circular(10);
+
+    return Container(
+      margin: EdgeInsets.only(top: 12),
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+      decoration: BoxDecoration(
+        color: UniversalVaribales.senderColor,
+        borderRadius: BorderRadius.only(
+          topLeft: messageRadius,
+          topRight: messageRadius,
+          bottomLeft: messageRadius,
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: getMessage(message),
+      ),
+    );
+  }
+
+  getMessage(Message message) {
+    return Text(
+      message.message,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16.0,
+      ),
+    );
+  }
+
+  Widget recieverLayout(Message message) {
+    Radius messageRadius = Radius.circular(10);
+
+    return Container(
+      margin: EdgeInsets.only(top: 12),
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+      decoration: BoxDecoration(
+        color: UniversalVaribales.recieverColor,
+        borderRadius: BorderRadius.only(
+          bottomRight: messageRadius,
+          topRight: messageRadius,
+          bottomLeft: messageRadius,
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: getMessage(message),
+      ),
+    );
+  }
+
+  Widget chatControls() {
+    setWritingTo(bool val) {
       setState(() {
         isWriting = val;
       });
@@ -167,168 +269,148 @@ class _MessageScreenState extends State<MessageScreen> {
           });
     }
 
+    sendMessage() {
+      var text = textFieldController.text;
+
+      Message _message = Message(
+        recieverId: widget.reciever.uid,
+        senderId: sender.uid,
+        message: text,
+        timestamp: Timestamp.now(),
+        type: 'text',
+      );
+
+      setState(() {
+        isWriting = false;
+      });
+
+      textFieldController.text = "";
+
+      _repository.addMessageToDb(_message, sender, widget.reciever);
+    }
 
     return Container(
-      padding:EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
       child: Row(
         children: <Widget>[
           GestureDetector(
-            onTap: ()=>addMediaModal(context),
+            onTap: () => addMediaModal(context),
             child: Container(
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 gradient: UniversalVaribales.fabGradient,
-                shape:BoxShape.circle
+                shape: BoxShape.circle,
               ),
               child: Icon(Icons.add),
             ),
           ),
-          SizedBox(width: 5,),
+          SizedBox(
+            width: 5,
+          ),
           Expanded(
-            child: TextField(
-              controller: textFieldController,
-              style: TextStyle(
-                color:Colors.white,
-              ),
-              onChanged: (val){
-                (val.length > 0 && val.trim() != "")? setWriting(true): setWriting(false);
-              },
-              decoration: InputDecoration(
-                hintText: " Type a message.. ",
-                hintStyle: TextStyle(
-                  color:UniversalVaribales.greyColor,
+            child: Stack(
+                children: <Widget>[
+                  TextField(
+                    onTap: (){
+                      hideEmojiContainer();
+                    },
+                controller: textFieldController,
+                focusNode: textFieldFocus,
+                style: TextStyle(
+                  color: Colors.white,
                 ),
-                border:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(50)
+                onChanged: (val) {
+                  (val.length > 0 && val.trim() != "")
+                      ? setWritingTo(true)
+                      : setWritingTo(false);
+                },
+                decoration: InputDecoration(
+                  hintText: "Type a message",
+                  hintStyle: TextStyle(
+                    color: UniversalVaribales.greyColor,
                   ),
-                  borderSide: BorderSide.none
+                  border: OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(50.0),
+                      ),
+                      borderSide: BorderSide.none),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  filled: true,
+                  fillColor: UniversalVaribales.separatorColor,
                 ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 20,vertical: 5
-                ),
-                filled:true,
-                fillColor: UniversalVaribales.separatorColor,
-                suffixIcon: GestureDetector(
-                  onTap: (){},
-                  child: Icon(Icons.face),
-                )
               ),
-            )
-            ),
-            isWriting ? Container():Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(Icons.record_voice_over),
-              ),
-             isWriting?Container(): Icon(Icons.camera_alt),
-            isWriting ? Container(
-              margin: EdgeInsets.only(left:5),
-              decoration: BoxDecoration(
-                shape:BoxShape.circle
-              ),
-              child:IconButton(
-                icon:Icon(
-                  Icons.send,
-                  size:25
-                ),
-                onPressed: ()=>sendMessage(),
+              IconButton(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onPressed: (){
+                  if(!showEmojiPicker){
+                    hideKeyboard();
+                    showEmojiContainer();
+                  }else{
+                    showKeyboard();
+                    hideEmojiContainer();
+                  }
+                },
+                icon: Icon(Icons.face),
               )
-            ):  Container()
+                ],
+            ),
+          ),
+          isWriting
+              ? Container()
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(Icons.record_voice_over),
+                ),
+          isWriting ? Container() : Icon(Icons.camera_alt),
+          isWriting
+              ? Container(
+                  margin: EdgeInsets.only(left: 10),
+                  decoration: BoxDecoration(
+                      gradient: UniversalVaribales.fabGradient,
+                      shape: BoxShape.circle),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.send,
+                      size: 15,
+                    ),
+                    onPressed: () => sendMessage(),
+                  ))
+              : Container()
         ],
       ),
     );
   }
 
-  Widget messageList(){
-    return StreamBuilder(
-      stream: Firestore
-      .instance
-      .collection("messages")
-      .document(_currentUserId)
-      .collection(widget.reciever.uid)
-      .orderBy("timestamp",descending: true)
-      .snapshots(),
-
-      builder:(context,AsyncSnapshot<QuerySnapshot> snapshot){
-        if (snapshot.data == null){
-          return Center(child: CircularProgressIndicator(),);
-        }
-
-        return ListView.builder(
-          padding:EdgeInsets.all(10),
-          itemCount: snapshot.data.documents.length,
-          itemBuilder: (context,index){
-            return chatMessageItem(snapshot.data.documents[index]);
-          },
-        );
-      },
-    );
-  }
-
-  Widget chatMessageItem(DocumentSnapshot snapshot){
-    Message _message = Message.fromMap(snapshot.data);
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
-      child: Container(
-        alignment: _message.senderId == _currentUserId ? Alignment.centerRight: Alignment.centerLeft, 
-        child: _message.senderId == _currentUserId ? senderLayout(_message) : recieverLayout(_message),
-      ),
-    );
-  }
-
-  Widget senderLayout(Message message){
-    Radius messageRadius = Radius.circular(10);
-
-    return Container(
-      margin:EdgeInsets.only(top:12),
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.65,
-      ),
-      decoration: BoxDecoration(
-        color:UniversalVaribales.senderColor,
-        borderRadius: BorderRadius.only(
-          topLeft: messageRadius,
-          topRight: messageRadius,
-          bottomLeft: messageRadius,  
+  CustomAppBar customAppBar(context) {
+    return CustomAppBar(
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
         ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
-        child:Padding(
-          padding: EdgeInsets.all(10),
-          child:getMessage(message)
-        )
-    );
-  }
-  
-  Widget recieverLayout(Message message){
-    Radius messageRadius = Radius.circular(10);
-
-    return Container(
-      margin:EdgeInsets.only(top:12),
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.65,
+      centerTitle: false,
+      title: Text(
+        widget.reciever.name,
       ),
-      decoration: BoxDecoration(
-        color:UniversalVaribales.recieverColor,
-        borderRadius: BorderRadius.only(
-          bottomRight: messageRadius,
-          topRight: messageRadius,
-          bottomLeft: messageRadius,  
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.video_call,
+          ),
+          onPressed: () {},
         ),
-      ),
-        child:Padding(
-          padding: EdgeInsets.all(10),
-          child:getMessage(message)
+        IconButton(
+          icon: Icon(
+            Icons.phone,
+          ),
+          onPressed: () {},
         )
-    );
-  }
-
-  getMessage(Message message){
-    return Text(
-      message.message,
-      style: TextStyle(
-        color:Colors.white,
-        fontSize: 16.0
-      ),
+      ],
     );
   }
 }
@@ -339,47 +421,47 @@ class ModalTile extends StatelessWidget {
   final String subtitle;
   final IconData icon;
 
- const ModalTile({
-    Key key,
-    @required  this.title, 
-    @required this.subtitle, 
-    @required this.icon
-  }) : super(key: key);
+  const ModalTile({
+    @required this.title,
+    @required this.subtitle,
+    @required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: CustomTile(
-        mini:false,
+        mini: false,
         leading: Container(
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color:UniversalVaribales.recieverColor,
+            color: UniversalVaribales.recieverColor,
           ),
           padding: EdgeInsets.all(10),
-          child:Icon(
-              icon,
-              color:UniversalVaribales.greyColor,
-              size:38            
+          child: Icon(
+            icon,
+            color: UniversalVaribales.greyColor,
+            size: 38,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(
+            color: UniversalVaribales.greyColor,
+            fontSize: 14,
           ),
         ),
         title: Text(
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color:Colors.white,
-            fontSize: 18
+            color: Colors.white,
+            fontSize: 18,
           ),
-        ), 
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            color:UniversalVaribales.greyColor,
-            fontSize: 14
-          ),
-        )),
+        ),
+      ),
     );
   }
 }
