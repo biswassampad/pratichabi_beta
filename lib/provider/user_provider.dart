@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
+import 'package:pratichabi/resources/auth_methods.dart';
 
 class UserProvider with ChangeNotifier{
   User _user;
 
-  FirebaseRepository _firebaseRepository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
 
   User get getUser => _user;
 
   void refreshUser() async{
-    User user = await _firebaseRepository.getUserDetails();
+    User user = await _authMethods.getUserDetails();
     _user = user;
     notifyListeners();
   }

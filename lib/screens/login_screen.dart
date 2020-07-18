@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
+import 'package:pratichabi/resources/auth_methods.dart';
 import 'package:pratichabi/screens/home_screen.dart';
 import 'package:pratichabi/utils/universal_variables.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,11 +11,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  FirebaseRepository _repository = FirebaseRepository();
+   final AuthMethods _authMethods = AuthMethods();
   bool isLoginPressed = false;
   @override
   Widget build(BuildContext context) {
-    _repository.signOut();
+    _authMethods.signOut();
     return Scaffold(
       backgroundColor: UniversalVaribales.blackColor,
       body: Stack(
@@ -55,7 +55,7 @@ class LoginScreenState extends State<LoginScreen> {
       isLoginPressed = true;
     });
     
-    _repository.signIn().then((FirebaseUser user) {
+    _authMethods.signIn().then((FirebaseUser user) {
       print("something");
       if (user != null) {
         authenticateUser(user);
@@ -66,9 +66,9 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   void authenticateUser(FirebaseUser user) {
-    _repository.authenticateUser(user).then((isNewUser) {
+    _authMethods.authenticateUser(user).then((isNewUser) {
       if (isNewUser) {
-        _repository.addDataToDb(user).then((value) {
+        _authMethods.addDataToDb(user).then((value) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return HomeScreen();

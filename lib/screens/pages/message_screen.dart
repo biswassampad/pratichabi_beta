@@ -8,7 +8,9 @@ import 'package:pratichabi/constants/strings.dart';
 import 'package:pratichabi/models/message.dart';
 import 'package:pratichabi/models/user.dart';
 import 'package:pratichabi/provider/image_upload_provider.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
+import 'package:pratichabi/resources/storage_methods.dart';
+import 'package:pratichabi/resources/chat_methods.dart';
+import 'package:pratichabi/resources/auth_methods.dart';
 import 'package:pratichabi/screens/widgets/cached_image.dart';
 import 'package:pratichabi/utils/call_utilities.dart';
 import 'package:pratichabi/utils/permissions.dart';
@@ -30,7 +32,9 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   
   TextEditingController textFieldController = TextEditingController();
-  FirebaseRepository _repository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
+   final StorageMethods _storageMethods = StorageMethods();
+    final ChatMethods _chatMethods = ChatMethods();
 
   ImageUploadProvider _imageUploadProvider;
 
@@ -47,7 +51,7 @@ class _MessageScreenState extends State<MessageScreen> {
   void initState() {
     super.initState();
 
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
       _currentUserId = user.uid;
 
       setState(() {
@@ -117,7 +121,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
    pickImage({@required ImageSource source}) async{
       File selctedImage = await Utils().pickImage(source:source);
-      _repository.uploadImage(
+      _storageMethods.uploadImage(
         image:selctedImage,
         recieverId:widget.reciever.uid,
         senderId:_currentUserId,
@@ -319,7 +323,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
       textFieldController.text = "";
 
-      _repository.addMessageToDb(_message, sender, widget.reciever);
+      _chatMethods.addMessageToDb(_message, sender, widget.reciever);
     }
 
    

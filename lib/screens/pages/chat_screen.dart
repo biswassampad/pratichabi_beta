@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
+import 'package:pratichabi/resources/auth_methods.dart';
 import 'package:pratichabi/utils/universal_variables.dart';
 import 'package:pratichabi/utils/utils.dart';
 import 'package:pratichabi/widgets/appbarr.dart';
@@ -10,7 +10,7 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-final FirebaseRepository _repository = FirebaseRepository();
+ final AuthMethods _authMethods = AuthMethods();
 
 class _ChatScreenState extends State<ChatScreen> {
 
@@ -20,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
      setState(() {
         currentUserId = user.uid;
         initials = Utils.getInitials(user.displayName);

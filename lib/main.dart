@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pratichabi/provider/image_upload_provider.dart';
 import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
+import 'package:pratichabi/resources/auth_methods.dart';
 import 'package:pratichabi/screens/home_screen.dart';
 import 'package:pratichabi/screens/login_screen.dart';
 import 'package:pratichabi/screens/pages/search_screen.dart';
@@ -12,10 +12,9 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
-
-// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  FirebaseRepository _repository = FirebaseRepository();
+
+  final AuthMethods _authMethods = AuthMethods();
   
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark
         ),
         home:FutureBuilder(
-          future:_repository.getCurrentUser(),
+          future:_authMethods.getCurrentUser(),
           builder: (context, AsyncSnapshot<FirebaseUser> snapshot){
             if(snapshot.hasData){
               return HomeScreen();
