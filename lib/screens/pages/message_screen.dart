@@ -5,12 +5,12 @@ import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/enum/view_state.dart';
 import 'package:pratichabi/models/message.dart';
 import 'package:pratichabi/models/user.dart';
 import 'package:pratichabi/provider/image_upload_provider.dart';
 import 'package:pratichabi/resources/firebase_repository.dart';
 import 'package:pratichabi/screens/widgets/cached_image.dart';
+import 'package:pratichabi/utils/call_utilities.dart';
 import 'package:pratichabi/utils/universal_variables.dart';
 import 'package:pratichabi/utils/utils.dart';
 import 'package:pratichabi/widgets/appbarr.dart';
@@ -443,7 +443,11 @@ class _MessageScreenState extends State<MessageScreen> {
           icon: Icon(
             Icons.video_call,
           ),
-          onPressed: () {},
+          onPressed: () =>CallUtils.dial(
+            from: sender,
+            to:widget.reciever,
+            context: context
+          ),
         ),
         IconButton(
           icon: Icon(
