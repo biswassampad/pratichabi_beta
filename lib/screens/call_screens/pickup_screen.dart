@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pratichabi/models/call.dart';
 import 'package:pratichabi/resources/call_methods.dart';
 import 'package:pratichabi/screens/call_screens/call_screen.dart';
+import 'package:pratichabi/screens/widgets/cached_image.dart';
+import 'package:pratichabi/utils/permissions.dart';
 
 class PickupScreen extends StatelessWidget {
 
@@ -23,7 +25,7 @@ class PickupScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Incoming..",
+              "Incoming Video Call..",
               style:TextStyle(
                 fontSize: 30
               )
@@ -31,10 +33,10 @@ class PickupScreen extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            Image.network(
+            CachedImage(
               call.callerPic,
-              height:150,
-              width:150,
+              isRound: true,
+              radius:180
             ),
             SizedBox(
               height:15
@@ -55,8 +57,10 @@ class PickupScreen extends StatelessWidget {
                 SizedBox(width:25),
                 IconButton(icon: Icon(Icons.call),
                 color:Colors.green, 
-                onPressed: ()=>Navigator.push(context,
-                  MaterialPageRoute(builder: (context)=>CallScreen(call:call)))
+                onPressed: () async => await Permissions.cameraAndMicrophonePermissionsGranted()? Navigator.push(context,
+                  MaterialPageRoute(builder: (context)=>CallScreen(call:call)
+                  )
+                  ) :{},
                 )
               ],
             )

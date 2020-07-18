@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pratichabi/provider/image_upload_provider.dart';
+import 'package:pratichabi/provider/user_provider.dart';
 import 'package:pratichabi/resources/firebase_repository.dart';
 import 'package:pratichabi/screens/home_screen.dart';
 import 'package:pratichabi/screens/login_screen.dart';
@@ -19,8 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return ChangeNotifierProvider<ImageUploadProvider>(
-        create: (context)=>ImageUploadProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create:(_)=>ImageUploadProvider()),
+        ChangeNotifierProvider(create:(_)=>UserProvider(),)
+      ],
           child: MaterialApp(
         title: 'Pratichabi',
         debugShowCheckedModeBanner: false,

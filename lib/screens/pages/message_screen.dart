@@ -11,6 +11,7 @@ import 'package:pratichabi/provider/image_upload_provider.dart';
 import 'package:pratichabi/resources/firebase_repository.dart';
 import 'package:pratichabi/screens/widgets/cached_image.dart';
 import 'package:pratichabi/utils/call_utilities.dart';
+import 'package:pratichabi/utils/permissions.dart';
 import 'package:pratichabi/utils/universal_variables.dart';
 import 'package:pratichabi/utils/utils.dart';
 import 'package:pratichabi/widgets/appbarr.dart';
@@ -196,7 +197,8 @@ class _MessageScreenState extends State<MessageScreen> {
         color: Colors.white,
         fontSize: 16.0,
       ),
-    ) : message.photoUrl != null ? CachedImage(url:message.photoUrl) : Text('Image file is broken');
+    ) : message.photoUrl != null ? CachedImage(message.photoUrl,height:250,width:250,radius: 10,) 
+    : Text('Image file is broken');
   }
 
   Widget recieverLayout(Message message) {
@@ -443,11 +445,12 @@ class _MessageScreenState extends State<MessageScreen> {
           icon: Icon(
             Icons.video_call,
           ),
-          onPressed: () =>CallUtils.dial(
+          onPressed: () async=>await Permissions.cameraAndMicrophonePermissionsGranted() ?
+           CallUtils.dial(
             from: sender,
             to:widget.reciever,
             context: context
-          ),
+          ) : {},
         ),
         IconButton(
           icon: Icon(
