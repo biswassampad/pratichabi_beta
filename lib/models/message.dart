@@ -17,7 +17,12 @@ class Message {
   });
   // will be called only in messages contain images 
   Message.imageMessage({
-    this.senderId,this.recieverId,this.message,this.type,this.timestamp,this.photoUrl
+    this.senderId,
+    this.recieverId,
+    this.message,
+    this.type,
+    this.timestamp,
+    this.photoUrl
   });
 
   Map toMap(){
@@ -26,7 +31,18 @@ class Message {
     map['recieverId'] = this.recieverId;
     map['type'] = this.type;
     map['message'] = this.message;
-    map['timestamp'] = this.message;
+    map['timestamp'] = this.timestamp;
+    return map;
+  }
+
+  Map toImageMap(){
+     var map =   Map<String,dynamic>();
+    map['senderId'] = this.senderId;
+    map['recieverId'] = this.recieverId;
+    map['type'] = this.type;
+    map['message'] = this.message;
+    map['timestamp'] = this.timestamp;
+    map['photoUrl'] = this.photoUrl;
     return map;
   }
 
@@ -36,6 +52,7 @@ class Message {
       this.type = map['type'];
       this.message = map['message'];
       this.timestamp = map['timeStamp'];
+      this.photoUrl = map['photoUrl'];
   }
 
 }

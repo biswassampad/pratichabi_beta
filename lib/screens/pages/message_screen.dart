@@ -1,13 +1,21 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pratichabi/constants/strings.dart';
+import 'package:pratichabi/enum/view_state.dart';
 import 'package:pratichabi/models/message.dart';
 import 'package:pratichabi/models/user.dart';
+import 'package:pratichabi/provider/image_upload_provider.dart';
 import 'package:pratichabi/resources/firebase_repository.dart';
+import 'package:pratichabi/screens/widgets/cached_image.dart';
 import 'package:pratichabi/utils/universal_variables.dart';
+import 'package:pratichabi/utils/utils.dart';
 import 'package:pratichabi/widgets/appbarr.dart';
 import 'package:pratichabi/widgets/custom_tile.dart';
+import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
   final User reciever;
@@ -22,6 +30,8 @@ class _MessageScreenState extends State<MessageScreen> {
   
   TextEditingController textFieldController = TextEditingController();
   FirebaseRepository _repository = FirebaseRepository();
+
+  ImageUploadProvider _imageUploadProvider;
 
   User sender;
 
@@ -66,6 +76,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
     return Scaffold(
       backgroundColor: UniversalVaribales.blackColor,
       appBar: customAppBar(context),
@@ -74,6 +85,12 @@ class _MessageScreenState extends State<MessageScreen> {
           Flexible(
             child: messageList(),
           ),
+          // _imageUploadProvider.getViewState == ViewState.LOADING ? 
+          // Container(
+          //   alignment: Alignment.centerRight,
+          //   margin: EdgeInsets.only(right:15),
+          //   child: CircularProgressIndicator()
+          //   ): Container(),
           chatControls(),
           showEmojiPicker ? Container(child:emojiContainer()):Container()
         ],
@@ -97,6 +114,15 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
+   pickImage({@required ImageSource source}) async{
+      File selctedImage = await Utils().pickImage(source:source);
+      _repository.uploadImage(
+        image:selctedImage,
+        recieverId:widget.reciever.uid,
+        senderId:_currentUserId,
+        imageUploadProvider:_imageUploadProvider,
+      );
+    }
 
   Widget messageList() {
     return StreamBuilder(
@@ -104,7 +130,7 @@ class _MessageScreenState extends State<MessageScreen> {
           .collection(MESSAGES_COLLECTION)
           .document(_currentUserId)
           .collection(widget.reciever.uid)
-          .orderBy(TIMESTAMP_FIELD, descending: true)
+          .orderBy('timestamp', descending: true)
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.data == null) {
@@ -162,13 +188,15 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   getMessage(Message message) {
-    return Text(
+   return message.type != MESSAGE_TYPE_IMAGE ?
+
+  Text(
       message.message,
       style: TextStyle(
         color: Colors.white,
         fontSize: 16.0,
       ),
-    );
+    ) : message.photoUrl != null ? CachedImage(url:message.photoUrl) : Text('Image file is broken');
   }
 
   Widget recieverLayout(Message message) {
@@ -240,6 +268,9 @@ class _MessageScreenState extends State<MessageScreen> {
                         title: "Media",
                         subtitle: "Share Photos and Video",
                         icon: Icons.image,
+                        onTap:()=>pickImage(
+                           source:ImageSource.gallery
+                          )
                       ),
                       ModalTile(
                           title: "File",
@@ -288,6 +319,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
       _repository.addMessageToDb(_message, sender, widget.reciever);
     }
+
+   
 
     return Container(
       padding: EdgeInsets.all(10),
@@ -340,19 +373,22 @@ class _MessageScreenState extends State<MessageScreen> {
                   fillColor: UniversalVaribales.separatorColor,
                 ),
               ),
-              IconButton(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                onPressed: (){
-                  if(!showEmojiPicker){
-                    hideKeyboard();
-                    showEmojiContainer();
-                  }else{
-                    showKeyboard();
-                    hideEmojiContainer();
-                  }
-                },
-                icon: Icon(Icons.face),
+              Positioned(
+                right: 0,
+                              child: IconButton(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onPressed: (){
+                    if(!showEmojiPicker){
+                      hideKeyboard();
+                      showEmojiContainer();
+                    }else{
+                      showKeyboard();
+                      hideEmojiContainer();
+                    }
+                  },
+                  icon: Icon(Icons.face),
+                ),
               )
                 ],
             ),
@@ -363,7 +399,12 @@ class _MessageScreenState extends State<MessageScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Icon(Icons.record_voice_over),
                 ),
-          isWriting ? Container() : Icon(Icons.camera_alt),
+          isWriting ? Container() : GestureDetector(
+            onTap: ()=>pickImage(
+              source:ImageSource.camera
+              ),
+            child: Icon(Icons.camera_alt)
+            ),
           isWriting
               ? Container(
                   margin: EdgeInsets.only(left: 10),
@@ -420,11 +461,13 @@ class ModalTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final Function onTap;
 
   const ModalTile({
     @required this.title,
     @required this.subtitle,
     @required this.icon,
+    this.onTap
   });
 
   @override
@@ -433,6 +476,7 @@ class ModalTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: CustomTile(
         mini: false,
+        onTap: onTap,
         leading: Container(
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
