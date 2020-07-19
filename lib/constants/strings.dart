@@ -4,3 +4,4 @@ const String TIMESTAMP_FIELD = "timestamp";
 const String EMAIL_VALUE = "email";
 const String MESSAGE_TYPE_IMAGE = "image";
 const String CALL_COLLECTION = "calls";
+const String CONTACTS_COLLECTION = "contacts";

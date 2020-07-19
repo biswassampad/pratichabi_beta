@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pratichabi/provider/user_provider.dart';
+import 'package:pratichabi/resources/auth_methods.dart';
 import 'package:pratichabi/screens/call_screens/pickup_layout.dart';
 import 'package:pratichabi/screens/pages/contact_screen.dart';
 import 'package:pratichabi/screens/pages/log_screen.dart';
 import 'package:pratichabi/utils/universal_variables.dart';
 import 'package:pratichabi/screens/pages/chat_screen.dart';
 import 'package:provider/provider.dart';
-
+import '../enum/user_state.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   PageController pageController;
   int _page = 0;
+  final AuthMethods _authMethods = AuthMethods();
 
   UserProvider userProvider;
 
@@ -30,8 +32,57 @@ class _HomeScreenState extends State<HomeScreen> {
 
     userProvider.refreshUser();
 
+    _authMethods.setUserState(userId: userProvider.getUser.uid, userState: UserState.Online);
+
      });
+
+    WidgetsBinding.instance.addObserver(this);
     pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  void didChangeAppLifeCycleState(AppLifecycleState state){
+    String currentUserId = 
+      (userProvider != null && userProvider.getUser != null)
+      ? userProvider.getUser.uid:"";
+
+      super.didChangeAppLifecycleState(state);
+
+        switch(state){
+          case AppLifecycleState.resumed:
+           currentUserId != null ?
+           _authMethods.setUserState(
+             userId: currentUserId,
+             userState: UserState.Online 
+             ): print('resume state');
+          break;
+        case AppLifecycleState.inactive:
+         currentUserId != null ?
+           _authMethods.setUserState(
+             userId: currentUserId,
+             userState: UserState.Offline 
+             ): print('offline state');
+          break;
+        case AppLifecycleState.paused:
+          currentUserId != null ?
+           _authMethods.setUserState(
+             userId: currentUserId,
+             userState: UserState.Waiting 
+             ): print('paused state');
+          break;
+        case AppLifecycleState.detached:
+         currentUserId != null ?
+           _authMethods.setUserState(
+             userId: currentUserId,
+             userState: UserState.Offline 
+             ): print('detached state');
+          break;
+        }
   }
 
   void onPageChanged(int page){

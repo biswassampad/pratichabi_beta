@@ -1,11 +1,13 @@
-import 'dart:io';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pratichabi/constants/strings.dart';
 import 'package:pratichabi/models/user.dart';
 import 'package:pratichabi/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../enum/user_state.dart';
 
 
 
@@ -60,6 +62,8 @@ class AuthMethods {
     return docs.length == 0 ? true : false;
   }
 
+
+
   Future<void> addDataToDb(FirebaseUser currentUser) async {
     String username = Utils.getUsername(currentUser.email);
 
@@ -93,4 +97,30 @@ class AuthMethods {
     await _googleSignIn.signOut();
     return await _auth.signOut();
   }
+
+  Future<User> getUserDetailsById(id) async{
+   try{
+      DocumentSnapshot documentSnapshot =await _userCollection.document(id).get();
+
+    return User.fromMap(documentSnapshot.data);
+   }catch(er){
+     print(er);
+     return null;
+   }
+  }
+
+  void setUserState({@required String userId, @required UserState userState}){  
+
+    int stateNum = Utils.stateToNum(userState);
+
+    _userCollection.document(userId).updateData(
+    {
+      "state":stateNum
+    }
+    );
+
+  }
+
+  Stream<DocumentSnapshot> getUserStream({@required String uid})=>
+    _userCollection.document(uid).snapshots();
 }
