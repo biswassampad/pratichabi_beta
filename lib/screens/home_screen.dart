@@ -26,13 +26,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState(){
     super.initState();
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       
-    userProvider = Provider.of<UserProvider>(context,listen: false);
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+      // ignore: await_only_futures
+      await userProvider.refreshUser();
 
-    userProvider.refreshUser();
-
-    _authMethods.setUserState(userId: userProvider.getUser.uid, userState: UserState.Online);
+      _authMethods.setUserState(
+        userId: userProvider.getUser.uid,
+        userState: UserState.Online, 
+      );
 
      });
 
@@ -46,10 +49,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
+
+  @override
   void didChangeAppLifeCycleState(AppLifecycleState state){
     String currentUserId = 
       (userProvider != null && userProvider.getUser != null)
-      ? userProvider.getUser.uid:"";
+      ? userProvider.getUser.uid
+      :"";
 
       super.didChangeAppLifecycleState(state);
 

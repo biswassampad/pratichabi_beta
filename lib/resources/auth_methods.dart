@@ -37,6 +37,17 @@ class AuthMethods {
     return User.fromMap(documentSnapshot.data);
   }
 
+  Future<User> getUserDetailsById(id) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _userCollection.document(id).get();
+      return User.fromMap(documentSnapshot.data);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<FirebaseUser> signIn() async {
     GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
     GoogleSignInAuthentication _signInAuthentication =
@@ -61,8 +72,6 @@ class AuthMethods {
     //if user is registered then length of list > 0 or else less than 0
     return docs.length == 0 ? true : false;
   }
-
-
 
   Future<void> addDataToDb(FirebaseUser currentUser) async {
     String username = Utils.getUsername(currentUser.email);
@@ -98,29 +107,14 @@ class AuthMethods {
     return await _auth.signOut();
   }
 
-  Future<User> getUserDetailsById(id) async{
-   try{
-      DocumentSnapshot documentSnapshot =await _userCollection.document(id).get();
-
-    return User.fromMap(documentSnapshot.data);
-   }catch(er){
-     print(er);
-     return null;
-   }
-  }
-
-  void setUserState({@required String userId, @required UserState userState}){  
-
+  void setUserState({@required String userId, @required UserState userState}) {
     int stateNum = Utils.stateToNum(userState);
 
-    _userCollection.document(userId).updateData(
-    {
-      "state":stateNum
-    }
-    );
-
+    _userCollection.document(userId).updateData({
+      "state": stateNum,
+    });
   }
 
-  Stream<DocumentSnapshot> getUserStream({@required String uid})=>
-    _userCollection.document(uid).snapshots();
+  Stream<DocumentSnapshot> getUserStream({@required String uid}) =>
+      _userCollection.document(uid).snapshots();
 }

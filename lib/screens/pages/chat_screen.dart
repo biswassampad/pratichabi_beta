@@ -62,7 +62,7 @@ class ChatListContainer extends StatelessWidget {
           itemBuilder: (context,index){
             Contact  contact  = Contact.fromMap(docList[index].data);
 
-            return ContactView(contact:contact);
+            return ContactView(contact);
             // return ContactView();
           },
         );

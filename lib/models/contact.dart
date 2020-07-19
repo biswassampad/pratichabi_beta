@@ -1,7 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'user.dart';
 
 class Contact{
   String uid;

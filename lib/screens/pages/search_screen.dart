@@ -113,7 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ));
           },
           leading: CircleAvatar(
-            backgroundImage: searchedUser.profilePhoto != null ? NetworkImage("https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg") : NetworkImage("https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg"),
+            backgroundImage: searchedUser.profilePhoto != null ? NetworkImage(searchedUser.profilePhoto) : NetworkImage("https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg"),
             backgroundColor: Colors.grey,
           ),
           title: Text(
