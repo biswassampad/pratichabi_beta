@@ -4,10 +4,8 @@ import 'package:pratichabi/models/contact.dart';
 import 'package:pratichabi/provider/user_provider.dart';
 import 'package:pratichabi/resources/chat_methods.dart';
 import 'package:pratichabi/screens/widgets/contact_view.dart';
-import 'package:pratichabi/screens/widgets/new_chat_button.dart';
 import 'package:pratichabi/screens/widgets/quite_box.dart';
 import 'package:pratichabi/screens/widgets/user_circle.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
 import 'package:pratichabi/widgets/appbarr.dart';
 import 'package:provider/provider.dart';
 
@@ -17,21 +15,19 @@ class ChatScreen extends StatelessWidget{
     return CustomAppBar(
       title: UserCircle(), 
       actions: <Widget>[
-        IconButton(icon: Icon(Icons.search,color:Colors.white), onPressed: (){
+        IconButton(icon: Icon(Icons.add_comment,color:Colors.white), onPressed: (){
           Navigator.pushNamed(context, '/search_screen');
         }),
-        IconButton(icon:Icon(Icons.more_vert,color:Colors.white),onPressed: null,)
       ], 
-      leading: IconButton(icon: Icon(Icons.notifications,color: Colors.white,), onPressed: null), 
+      leading: IconButton(icon: Icon(Icons.portrait,color: Colors.white,), onPressed: null), 
       centerTitle: true);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UniversalVaribales.blackColor,
-      appBar:customAppBar(context),
-      floatingActionButton: NewChatButton(),
+      backgroundColor:Colors.white,
+      appBar:customAppBar(context), 
       body: ChatListContainer(),
     );
   }
@@ -67,7 +63,9 @@ class ChatListContainer extends StatelessWidget {
           },
         );
           }
-            return Center(child: CircularProgressIndicator(),);
+            return Center(child: CircularProgressIndicator(
+              backgroundColor: Colors.yellow[300],
+            ),);
         },
       )
     );

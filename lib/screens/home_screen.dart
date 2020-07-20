@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return PickUpLayout(
           scaffold: Scaffold( 
-        backgroundColor: UniversalVaribales.blackColor,
+        backgroundColor: Colors.white,
         body: PageView(
           children: <Widget>[
             Center(child: ChatScreen(),),
@@ -117,21 +117,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
         bottomNavigationBar: Container(
           child:Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.symmetric(vertical: 20),
             child: CupertinoTabBar(
-              backgroundColor: UniversalVaribales.blackColor,
+              backgroundColor: Colors.white,
               items:<BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon:Icon(Icons.chat,color:(_page ==0)?UniversalVaribales.lightBlueColor:UniversalVaribales.greyColor),
-                  title: Text('Chats',style: TextStyle(fontSize:10,color:(_page ==0)?UniversalVaribales.lightBlueColor:UniversalVaribales.greyColor))
+                  icon:Icon(Icons.chat,color:(_page ==0)?UniversalVaribales.blackColor:UniversalVaribales.greyColor),
+                  title: Text('Chats',style: TextStyle(fontSize:10,color:(_page ==0)?Colors.black:UniversalVaribales.greyColor))
                 ),
                 BottomNavigationBarItem(
-                  icon:Icon(Icons.call,color:(_page ==1)?UniversalVaribales.lightBlueColor:UniversalVaribales.greyColor),
-                  title: Text('Calls',style: TextStyle(fontSize:10,color:(_page ==1)?UniversalVaribales.lightBlueColor:UniversalVaribales.greyColor))
+                  icon:Icon(Icons.call,color:(_page ==1)?UniversalVaribales.blackColor:UniversalVaribales.greyColor),
+                  title: Text('Calls',style: TextStyle(fontSize:10,color:(_page ==1)?Colors.black:UniversalVaribales.greyColor))
                 ),
                 BottomNavigationBarItem(
-                  icon:Icon(Icons.contacts,color:(_page ==2)?UniversalVaribales.lightBlueColor:UniversalVaribales.greyColor),
-                  title: Text('Contacts',style: TextStyle(fontSize:10,color:(_page ==2)?UniversalVaribales.lightBlueColor:UniversalVaribales.greyColor))
+                  icon:Icon(Icons.contacts,color:(_page ==2)?UniversalVaribales.blackColor:UniversalVaribales.greyColor),
+                  title: Text('Contacts',style: TextStyle(fontSize:10,color:(_page ==2)?Colors.black:UniversalVaribales.greyColor))
                 )
               ],
               onTap: navigationTapped,

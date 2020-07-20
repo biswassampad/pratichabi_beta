@@ -25,8 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           border:Border(
             bottom:BorderSide(
               color:UniversalVaribales.separatorColor,
-              width:1.4,
-              style:BorderStyle.solid     
+              width:0.5  
             )
           )
         ),
