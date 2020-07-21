@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/models/contact.dart';
-import 'package:pratichabi/models/message.dart';
-import 'package:pratichabi/models/user.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/contact.dart';
+import 'package:senger/models/message.dart';
+import 'package:senger/models/user.dart';
 
 class ChatMethods {
   static final Firestore _firestore = Firestore.instance;

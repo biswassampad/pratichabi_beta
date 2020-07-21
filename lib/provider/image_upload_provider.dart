@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pratichabi/enum/view_state.dart';
+import 'package:senger/enum/view_state.dart';
 
 class ImageUploadProvider with ChangeNotifier{
 

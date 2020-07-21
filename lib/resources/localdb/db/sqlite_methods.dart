@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:pratichabi/models/logs.dart';
-import 'package:pratichabi/resources/localdb/interface/log_interface.dart';
+import 'package:senger/models/logs.dart';
+import 'package:senger/resources/localdb/interface/log_interface.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

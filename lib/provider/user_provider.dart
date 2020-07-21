@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/resources/auth_methods.dart';
 
 class UserProvider with ChangeNotifier {
   User _user;

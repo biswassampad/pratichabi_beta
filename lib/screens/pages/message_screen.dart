@@ -4,20 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/models/message.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/provider/image_upload_provider.dart';
-import 'package:pratichabi/resources/storage_methods.dart';
-import 'package:pratichabi/resources/chat_methods.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/screens/widgets/cached_image.dart';
-import 'package:pratichabi/utils/call_utilities.dart';
-import 'package:pratichabi/utils/permissions.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
-import 'package:pratichabi/utils/utils.dart';
-import 'package:pratichabi/widgets/appbarr.dart';
-import 'package:pratichabi/widgets/custom_tile.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/message.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/provider/image_upload_provider.dart';
+import 'package:senger/resources/storage_methods.dart';
+import 'package:senger/resources/chat_methods.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/widgets/cached_image.dart';
+import 'package:senger/utils/call_utilities.dart';
+import 'package:senger/utils/permissions.dart';
+import 'package:senger/utils/universal_variables.dart';
+import 'package:senger/utils/utils.dart';
+import 'package:senger/widgets/appbarr.dart';
+import 'package:senger/widgets/custom_tile.dart';
 import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -83,7 +83,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
     return Scaffold(
-      backgroundColor: UniversalVaribales.blackColor,
+      backgroundColor: Colors.white,
       appBar: customAppBar(context),
       body: Column(
         children: <Widget>[
@@ -105,7 +105,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   emojiContainer(){
     return EmojiPicker(
-      bgColor: UniversalVaribales.separatorColor,
+      bgColor: Colors.white,
       indicatorColor: UniversalVaribales.blueColor,
       rows:3,
       columns:7,
@@ -213,7 +213,7 @@ class _MessageScreenState extends State<MessageScreen> {
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
-        color: UniversalVaribales.recieverColor,
+        gradient: UniversalVaribales.msgGradient,
         borderRadius: BorderRadius.only(
           bottomRight: messageRadius,
           topRight: messageRadius,
@@ -356,7 +356,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 controller: textFieldController,
                 focusNode: textFieldFocus,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onChanged: (val) {
                   (val.length > 0 && val.trim() != "")
@@ -366,7 +366,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 decoration: InputDecoration(
                   hintText: "Type a message",
                   hintStyle: TextStyle(
-                    color: UniversalVaribales.greyColor,
+                    color: Colors.grey,
                   ),
                   border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
@@ -376,7 +376,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   filled: true,
-                  fillColor: UniversalVaribales.separatorColor,
+                  fillColor: Colors.grey[100],
                 ),
               ),
               Positioned(
@@ -393,7 +393,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       hideEmojiContainer();
                     }
                   },
-                  icon: Icon(Icons.face),
+                  icon: Icon(Icons.face,color: UniversalVaribales.gradientColorEnd),
                 ),
               )
                 ],
@@ -403,13 +403,13 @@ class _MessageScreenState extends State<MessageScreen> {
               ? Container()
               : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.record_voice_over),
+                  child: Icon(Icons.record_voice_over,color: UniversalVaribales.gradientColorEnd),
                 ),
           isWriting ? Container() : GestureDetector(
             onTap: ()=>pickImage(
               source:ImageSource.camera
               ),
-            child: Icon(Icons.camera_alt)
+            child: Icon(Icons.camera_alt,color: UniversalVaribales.gradientColorEnd,)
             ),
           isWriting
               ? Container(

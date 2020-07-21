@@ -3,9 +3,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/utils/utils.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../enum/user_state.dart';
 

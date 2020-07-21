@@ -1,4 +1,4 @@
-import 'package:pratichabi/models/logs.dart';
+import 'package:senger/models/logs.dart';
 
 abstract class LogInterface{
   init();

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pratichabi/provider/image_upload_provider.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/screens/home_screen.dart';
-import 'package:pratichabi/screens/login_screen.dart';
-import 'package:pratichabi/screens/pages/search_screen.dart';
+import 'package:senger/provider/image_upload_provider.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/home_screen.dart';
+import 'package:senger/screens/login_screen.dart';
+import 'package:senger/screens/pages/search_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create:(_)=>UserProvider(),)
       ],
           child: MaterialApp(
-        title: 'Pratichabi',
+        title: 'senger',
         debugShowCheckedModeBanner: false,
         initialRoute: "/",
         routes: {

@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/contact.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/chat_methods.dart';
-import 'package:pratichabi/screens/widgets/contact_view.dart';
-import 'package:pratichabi/screens/widgets/quite_box.dart';
-import 'package:pratichabi/screens/widgets/user_circle.dart';
-import 'package:pratichabi/widgets/appbarr.dart';
+import 'package:senger/models/contact.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/chat_methods.dart';
+import 'package:senger/screens/widgets/contact_view.dart';
+import 'package:senger/screens/widgets/quite_box.dart';
+import 'package:senger/screens/widgets/shrimmering_logo_two.dart';
+import 'package:senger/screens/widgets/user_circle.dart';
+import 'package:senger/widgets/appbarr.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatelessWidget{
@@ -19,7 +20,7 @@ class ChatScreen extends StatelessWidget{
           Navigator.pushNamed(context, '/search_screen');
         }),
       ], 
-      leading: IconButton(icon: Icon(Icons.portrait,color: Colors.white,), onPressed: null), 
+      leading: ShimmeringLogoTwo(), 
       centerTitle: true);
   }
 
@@ -53,9 +54,9 @@ class ChatListContainer extends StatelessWidget {
               return QuietBox();
             }
             return ListView.builder(
-          padding:EdgeInsets.all(10),
-          itemCount:docList.length,
-          itemBuilder: (context,index){
+            padding:EdgeInsets.all(10),
+            itemCount:docList.length,
+            itemBuilder: (context,index){
             Contact  contact  = Contact.fromMap(docList[index].data);
 
             return ContactView(contact);

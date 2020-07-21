@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/call.dart';
-import 'package:pratichabi/resources/call_methods.dart';
-import 'package:pratichabi/screens/call_screens/call_screen.dart';
-import 'package:pratichabi/screens/widgets/cached_image.dart';
-import 'package:pratichabi/utils/permissions.dart';
+import 'package:senger/models/call.dart';
+import 'package:senger/resources/call_methods.dart';
+import 'package:senger/screens/call_screens/call_screen.dart';
+import 'package:senger/screens/widgets/cached_image.dart';
+import 'package:senger/utils/permissions.dart';
 
 class PickupScreen extends StatelessWidget {
 

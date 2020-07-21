@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
+import 'package:senger/utils/universal_variables.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
  
@@ -13,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
    @required this.title,
    @required this.actions,
    @required this.leading,
-   @required this.centerTitle
+   @required this.centerTitle,
  }): super(key:key);
  
   @override

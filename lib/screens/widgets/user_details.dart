@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/screens/widgets/cached_image.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/screens/widgets/cached_image.dart';
 import 'package:provider/provider.dart';
 
 class UserDetailsBody extends StatelessWidget {

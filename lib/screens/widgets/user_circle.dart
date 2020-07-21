@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/screens/widgets/user_details_container.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
-import 'package:pratichabi/utils/utils.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/screens/widgets/user_details_container.dart';
+import 'package:senger/utils/universal_variables.dart';
+import 'package:senger/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class UserCircle extends StatelessWidget {

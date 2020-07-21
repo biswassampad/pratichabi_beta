@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/models/call.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/call.dart';
 
 class CallMethods{
   final CollectionReference callCollection = Firestore.instance.collection(CALL_COLLECTION);

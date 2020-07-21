@@ -1,13 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/contact.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/resources/chat_methods.dart';
-import 'package:pratichabi/screens/pages/message_screen.dart';
-import 'package:pratichabi/screens/widgets/cached_image.dart';
-import 'package:pratichabi/widgets/custom_tile.dart';
+import 'package:senger/models/contact.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/resources/chat_methods.dart';
+import 'package:senger/screens/pages/message_screen.dart';
+import 'package:senger/screens/widgets/cached_image.dart';
+import 'package:senger/widgets/custom_tile.dart';
 import 'package:provider/provider.dart';
 import 'last_message_container.dart';
 import 'online_indicator.dart';

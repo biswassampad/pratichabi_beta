@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
+import 'package:senger/utils/universal_variables.dart';
 
 class NewChatButton extends StatelessWidget {
   @override

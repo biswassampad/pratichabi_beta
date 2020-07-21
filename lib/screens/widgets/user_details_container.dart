@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/screens/login_screen.dart';
-import 'package:pratichabi/screens/widgets/shimmering_logo.dart';
-import 'package:pratichabi/screens/widgets/user_details.dart';
-import 'package:pratichabi/widgets/appbarr.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/login_screen.dart';
+import 'package:senger/screens/widgets/shimmering_logo.dart';
+import 'package:senger/screens/widgets/user_details.dart';
+import 'package:senger/widgets/appbarr.dart';
 
 class UserDetailsContainer extends StatelessWidget {
   @override

@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/call.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/resources/call_methods.dart';
-import 'package:pratichabi/screens/call_screens/call_screen.dart';
+import 'package:senger/models/call.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/resources/call_methods.dart';
+import 'package:senger/screens/call_screens/call_screen.dart';
 
 class CallUtils{
 

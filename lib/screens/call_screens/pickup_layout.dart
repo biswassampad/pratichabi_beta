@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/call.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/call_methods.dart';
-import 'package:pratichabi/screens/call_screens/pickup_screen.dart';
+import 'package:senger/models/call.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/call_methods.dart';
+import 'package:senger/screens/call_screens/pickup_screen.dart';
 import 'package:provider/provider.dart';
 
 class PickUpLayout extends StatelessWidget {

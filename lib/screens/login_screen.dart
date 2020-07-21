@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/screens/animations/fadeanimation.dart';
-import 'package:pratichabi/screens/home_screen.dart';
-import 'package:pratichabi/screens/widgets/shimmering_logo.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/animations/fadeanimation.dart';
+import 'package:senger/screens/home_screen.dart';
+import 'package:senger/screens/widgets/shimmering_logo.dart';
+import 'package:senger/utils/universal_variables.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoginScreen extends StatefulWidget {

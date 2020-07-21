@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/screens/call_screens/pickup_layout.dart';
-import 'package:pratichabi/screens/pages/contact_screen.dart';
-import 'package:pratichabi/screens/pages/log_screen.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
-import 'package:pratichabi/screens/pages/chat_screen.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/call_screens/pickup_layout.dart';
+import 'package:senger/screens/pages/contact_screen.dart';
+import 'package:senger/screens/pages/log_screen.dart';
+import 'package:senger/utils/universal_variables.dart';
+import 'package:senger/screens/pages/chat_screen.dart';
 import 'package:provider/provider.dart';
 import '../enum/user_state.dart';
 class HomeScreen extends StatefulWidget {

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/resources/auth_methods.dart';
-import 'package:pratichabi/screens/pages/message_screen.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
-import 'package:pratichabi/widgets/custom_tile.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/pages/message_screen.dart';
+import 'package:senger/utils/universal_variables.dart';
+import 'package:senger/widgets/custom_tile.dart';
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -135,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UniversalVaribales.blackColor,
+      backgroundColor:Colors.white,
       appBar: searchAppBar(context),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
