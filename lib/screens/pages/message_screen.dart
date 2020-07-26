@@ -15,8 +15,7 @@ import 'package:senger/resources/storage_methods.dart';
 import 'package:senger/resources/chat_methods.dart';
 import 'package:senger/resources/auth_methods.dart';
 import 'package:senger/screens/widgets/cached_image.dart';
-import 'package:senger/screens/widgets/user_circle.dart';
-import 'package:senger/screens/widgets/user_details_container.dart';
+import 'package:senger/screens/call_screens/pickup_layout.dart';
 import 'package:senger/utils/call_utilities.dart';
 import 'package:senger/utils/permissions.dart';
 import 'package:senger/utils/universal_variables.dart';
@@ -24,7 +23,6 @@ import 'package:senger/utils/utils.dart';
 import 'package:senger/widgets/appbarr.dart';
 import 'package:senger/widgets/custom_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';  
 
 class MessageScreen extends StatefulWidget {
   final User reciever;
@@ -91,23 +89,25 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: customAppBar(context),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: messageList(),
-          ),
-          // _imageUploadProvider.getViewState == ViewState.LOADING ? 
-          // Container(
-          //   alignment: Alignment.centerRight,
-          //   margin: EdgeInsets.only(right:15),
-          //   child: CircularProgressIndicator()
-          //   ): Container(),
-          chatControls(),
-          showEmojiPicker ? Container(child:emojiContainer()):Container()
-        ],
+    return PickUpLayout(
+          scaffold: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: customAppBar(context),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messageList(),
+            ),
+            // _imageUploadProvider.getViewState == ViewState.LOADING ? 
+            // Container(
+            //   alignment: Alignment.centerRight,
+            //   margin: EdgeInsets.only(right:15),
+            //   child: CircularProgressIndicator()
+            //   ): Container(),
+            chatControls(),
+            showEmojiPicker ? Container(child:emojiContainer()):Container()
+          ],
+        ),
       ),
     );
   }
