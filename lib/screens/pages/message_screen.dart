@@ -2,16 +2,21 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:senger/constants/menu.dart';
 import 'package:senger/constants/strings.dart';
 import 'package:senger/models/message.dart';
 import 'package:senger/models/user.dart';
 import 'package:senger/provider/image_upload_provider.dart';
+import 'package:senger/provider/user_provider.dart';
 import 'package:senger/resources/storage_methods.dart';
 import 'package:senger/resources/chat_methods.dart';
 import 'package:senger/resources/auth_methods.dart';
 import 'package:senger/screens/widgets/cached_image.dart';
+import 'package:senger/screens/widgets/user_circle.dart';
+import 'package:senger/screens/widgets/user_details_container.dart';
 import 'package:senger/utils/call_utilities.dart';
 import 'package:senger/utils/permissions.dart';
 import 'package:senger/utils/universal_variables.dart';
@@ -19,6 +24,7 @@ import 'package:senger/utils/utils.dart';
 import 'package:senger/widgets/appbarr.dart';
 import 'package:senger/widgets/custom_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';  
 
 class MessageScreen extends StatefulWidget {
   final User reciever;
@@ -35,6 +41,7 @@ class _MessageScreenState extends State<MessageScreen> {
   final AuthMethods _authMethods = AuthMethods();
    final StorageMethods _storageMethods = StorageMethods();
     final ChatMethods _chatMethods = ChatMethods();
+    final UserProvider userProvider = UserProvider();
 
   ImageUploadProvider _imageUploadProvider;
 
@@ -46,6 +53,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
   bool isWriting = false;
   bool showEmojiPicker = false;
+  bool isDownloading = false;
+  
 
   @override
   void initState() {
@@ -126,8 +135,21 @@ class _MessageScreenState extends State<MessageScreen> {
         recieverId:widget.reciever.uid,
         senderId:_currentUserId,
         imageUploadProvider:_imageUploadProvider,
+        type:'image'
       );
     }
+
+  pickFile() async{
+    File file = await FilePicker.getFile();
+    print(file);
+     _storageMethods.uploadImage(
+        image:file,
+        recieverId:widget.reciever.uid,
+        senderId:_currentUserId,
+        imageUploadProvider:_imageUploadProvider,
+        type:'file'
+      );
+  }
 
   Widget messageList() {
     return StreamBuilder(
@@ -238,7 +260,7 @@ class _MessageScreenState extends State<MessageScreen> {
       showModalBottomSheet(
           context: context,
           elevation: 0,
-          backgroundColor: UniversalVaribales.blackColor,
+          backgroundColor: Colors.white,
           builder: (context) {
             return Column(
               children: <Widget>[
@@ -249,6 +271,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       FlatButton(
                         child: Icon(
                           Icons.close,
+                          color: Colors.yellow[700],
                         ),
                         onPressed: () => Navigator.maybePop(context),
                       ),
@@ -258,7 +281,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           child: Text(
                             "Content and tools",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.yellow[900],
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -274,31 +297,28 @@ class _MessageScreenState extends State<MessageScreen> {
                         title: "Media",
                         subtitle: "Share Photos and Video",
                         icon: Icons.image,
-                        onTap:()=>pickImage(
-                           source:ImageSource.gallery
-                          )
+                        onTap:()=>{pickImage(
+                           source:ImageSource.gallery,
+                          ),
+                          Navigator.maybePop(context)
+                          
+                          }
                       ),
                       ModalTile(
                           title: "File",
                           subtitle: "Share files",
-                          icon: Icons.tab),
+                          icon: Icons.tab,
+                          onTap:()=>{
+                            pickFile(),
+                            Navigator.maybePop(context)
+                            }
+                          
+                          ),
                       ModalTile(
                           title: "Contact",
                           subtitle: "Share contacts",
                           icon: Icons.contacts),
-                      ModalTile(
-                          title: "Location",
-                          subtitle: "Share a location",
-                          icon: Icons.add_location),
-                      ModalTile(
-                          title: "Schedule Call",
-                          subtitle: "Arrange a skype call and get reminders",
-                          icon: Icons.schedule),
-                      ModalTile(
-                          title: "Create Poll",
-                          subtitle: "Share polls",
-                          icon: Icons.poll)
-                    ],
+                      ],
                   ),
                 ),
               ],
@@ -379,9 +399,14 @@ class _MessageScreenState extends State<MessageScreen> {
                   fillColor: Colors.grey[100],
                 ),
               ),
-              Positioned(
-                right: 0,
-                              child: IconButton(
+                ],
+            ),
+          ),
+          isWriting
+              ? Container()
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: IconButton(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   onPressed: (){
@@ -395,15 +420,6 @@ class _MessageScreenState extends State<MessageScreen> {
                   },
                   icon: Icon(Icons.face,color: UniversalVaribales.gradientColorEnd),
                 ),
-              )
-                ],
-            ),
-          ),
-          isWriting
-              ? Container()
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.record_voice_over,color: UniversalVaribales.gradientColorEnd),
                 ),
           isWriting ? Container() : GestureDetector(
             onTap: ()=>pickImage(
@@ -432,13 +448,17 @@ class _MessageScreenState extends State<MessageScreen> {
 
   CustomAppBar customAppBar(context) {
     return CustomAppBar(
-      leading: IconButton(
+      leading: Row(
+        children: <Widget>[
+          IconButton(
         icon: Icon(
           Icons.arrow_back,
         ),
         onPressed: () {
           Navigator.pop(context);
         },
+      ),
+        ],
       ),
       centerTitle: false,
       title: Text(
@@ -456,14 +476,23 @@ class _MessageScreenState extends State<MessageScreen> {
             context: context
           ) : {},
         ),
-        IconButton(
-          icon: Icon(
-            Icons.phone,
-          ),
-          onPressed: () {},
+        PopupMenuButton<String>(
+          onSelected:choiceActions,
+          itemBuilder: (BuildContext context){
+            return Constants.choices.map((String choice){
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
         )
       ],
     );
+  }
+
+  void choiceActions(String choice){
+    print('working $choice');
   }
 }
 
@@ -497,7 +526,7 @@ class ModalTile extends StatelessWidget {
           padding: EdgeInsets.all(10),
           child: Icon(
             icon,
-            color: UniversalVaribales.greyColor,
+            color: Colors.yellow,
             size: 38,
           ),
         ),
@@ -512,7 +541,7 @@ class ModalTile extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 18,
           ),
         ),

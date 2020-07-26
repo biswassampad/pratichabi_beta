@@ -37,6 +37,7 @@ class StorageMethods {
     @required String recieverId,
     @required String senderId,
     @required ImageUploadProvider imageUploadProvider,
+    @required String type
   }) async {
     final ChatMethods chatMethods = ChatMethods();
 
@@ -49,6 +50,6 @@ class StorageMethods {
     // Hide loading
     imageUploadProvider.setToIdle();
 
-    chatMethods.setImageMsg(url, recieverId, senderId);
+    chatMethods.setImageMsg(url, recieverId, senderId, type);
   }
 }

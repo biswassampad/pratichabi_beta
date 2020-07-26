@@ -5,3 +5,5 @@ const String EMAIL_VALUE = "email";
 const String MESSAGE_TYPE_IMAGE = "image";
 const String CALL_COLLECTION = "calls";
 const String CONTACTS_COLLECTION = "contacts";
+const String TEXT_TYPE = "text";
+const String FILE_TYPE ="file";

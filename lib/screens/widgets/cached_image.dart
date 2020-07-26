@@ -19,7 +19,7 @@ import 'package:cached_network_image/cached_network_image.dart';
       this.radius = 0,
       this.height,
       this.width,
-      this.fit = BoxFit.cover,
+      this.fit = BoxFit.cover, String url,
     });
 
     @override

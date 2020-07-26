@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pratichabi">
+    package="com.kcfpl.senger">
 
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -16,7 +16,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="pratichabi"
+        android:label="senger"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

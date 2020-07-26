@@ -88,7 +88,7 @@ class ChatMethods {
     }
   }
 
-  void setImageMsg(String url, String recieverId, String senderId) async {
+  void setImageMsg(String url, String recieverId, String senderId ,String type) async {
     Message message;
 
     message = Message.imageMessage(
@@ -97,7 +97,7 @@ class ChatMethods {
         senderId: senderId,
         photoUrl: url,
         timestamp: Timestamp.now(),
-        type: 'image');
+        type: type);
 
     // create imagemap
     var map = message.toImageMap();
@@ -112,7 +112,9 @@ class ChatMethods {
         .document(message.recieverId)
         .collection(message.senderId)
         .add(map);
+    print('upload type $type successfull');
   }
+ 
 
   Stream<QuerySnapshot> fetchContacts({String userId}) => _userCollection
       .document(userId)
