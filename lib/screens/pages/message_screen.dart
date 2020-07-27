@@ -152,6 +152,7 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Widget messageList() {
+    print('new message fetched');
     return StreamBuilder(
       stream: Firestore.instance
           .collection(MESSAGES_COLLECTION)
