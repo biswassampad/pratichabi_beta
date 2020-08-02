@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:pratichabi/models/call.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/resources/call_methods.dart';
-import 'package:pratichabi/screens/call_screens/call_screen.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/call.dart';
+import 'package:senger/models/logs.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/resources/call_methods.dart';
+import 'package:senger/resources/localdb/repository/log_respository.dart';
+import 'package:senger/screens/call_screens/call_screen.dart';
 
 class CallUtils{
 
@@ -21,11 +24,23 @@ class CallUtils{
     channelId: Random().nextInt(10000).toString(),
     );
 
+    Log log=Log(
+      callerName: from.name,
+      callerPic: from.profilePhoto,
+      callStatus:  CALL_STATUS_DIALED,
+      receiverName: to.name,
+      receiverPic: to.profilePhoto,
+      timestamp: DateTime.now().toString()
+    );
+    
     bool callMade = await callMethods.makeCall(call:call);
 
     call.hasDialled = true;
 
     if(callMade){
+      // new log added when call created from host
+      LogRepository.addLogs(log);
+
       Navigator.push(
           context,
           MaterialPageRoute(

@@ -4,10 +4,10 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:pratichabi/configs/agora_configs.dart';
-import 'package:pratichabi/models/call.dart';
-import 'package:pratichabi/provider/user_provider.dart';
-import 'package:pratichabi/resources/call_methods.dart';
+import 'package:senger/configs/agora_configs.dart';
+import 'package:senger/models/call.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/call_methods.dart';
 import 'package:provider/provider.dart';
 
 class CallScreen extends StatefulWidget {

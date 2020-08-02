@@ -1,48 +1,41 @@
 {
-  "project_info": {
-    "project_number": "880529845771",
-    "firebase_url": "https://pratichabi-eb21d.firebaseio.com",
-    "project_id": "pratichabi-eb21d",
-    "storage_bucket": "pratichabi-eb21d.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:880529845771:android:226fabcd57350a822e610e",
-        "android_client_info": {
-          "package_name": "com.example.pratichabi"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "880529845771-8lp3be0oftt0b58lucgovvt2k846tq76.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.pratichabi",
-            "certificate_hash": "bf33ce9626a28564ac041be2ae3159deb4070fdb"
-          }
-        },
-        {
-          "client_id": "880529845771-vnseteh1j1nvu1l95s5nvt73fkamn1r5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB7ekMwmXliaHNElrTV8BTjnP2S20h_QQA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "880529845771-vnseteh1j1nvu1l95s5nvt73fkamn1r5.apps.googleusercontent.com",
-              "client_type": 3
+    "project_info": {
+        "project_number": "1063144804234",
+        "firebase_url": "https://senger-aa723.firebaseio.com",
+        "project_id": "senger-aa723",
+        "storage_bucket": "senger-aa723.appspot.com"
+    },
+    "client": [{
+        "client_info": {
+            "mobilesdk_app_id": "1:1063144804234:android:7ec75eba62ce351610c273",
+            "android_client_info": {
+                "package_name": "com.kcfpl.senger"
             }
-          ]
+        },
+        "oauth_client": [{
+                "client_id": "1063144804234-d9ahgu09j9g2dv6q2ceebda01jt0ncrr.apps.googleusercontent.com",
+                "client_type": 1,
+                "android_info": {
+                    "package_name": "com.kcfpl.senger",
+                    "certificate_hash": "bf33ce9626a28564ac041be2ae3159deb4070fdb"
+                }
+            },
+            {
+                "client_id": "1063144804234-bcp3sipanf5qf3at0trpcelphndtcksl.apps.googleusercontent.com",
+                "client_type": 3
+            }
+        ],
+        "api_key": [{
+            "current_key": "AIzaSyCkbbcBleS09Fk_6NDe96eUNnEYtQ_lfFs"
+        }],
+        "services": {
+            "appinvite_service": {
+                "other_platform_oauth_client": [{
+                    "client_id": "1063144804234-bcp3sipanf5qf3at0trpcelphndtcksl.apps.googleusercontent.com",
+                    "client_type": 3
+                }]
+            }
         }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    }],
+    "configuration_version": "1"
 }

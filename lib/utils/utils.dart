@@ -2,8 +2,10 @@ import 'dart:io';
 import 'dart:math';
 import 'package:image/image.dart' as Im;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
+import '../enum/user_state.dart';
 
 class Utils {
     final _picker = ImagePicker();
@@ -38,4 +40,38 @@ class Utils {
       ..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
   }
   
+  static int stateToNum(UserState userState){
+    switch(userState){
+      case UserState.Offline:
+      return 0;
+
+      case UserState.Online:
+      return 1;
+
+      default:
+      return 2;
+    }
+  }
+
+  static UserState numToState(int number){
+    switch(number){
+      case 0:
+        return UserState.Offline;
+      case 1:
+        return UserState.Online;
+      default:
+        return UserState.Waiting;
+    }
+  }
+
+
+  static String formatDateString(String dateString){
+    DateTime dateTime = DateTime.parse(dateString);
+    var formatter = DateFormat('dd/mm/yy');
+
+    return formatter.format(dateTime);
+
+  }
+
+
   }
