@@ -1,18 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
-import 'package:pratichabi/screens/pages/message_screen.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
-import 'package:pratichabi/widgets/custom_tile.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/pages/message_screen.dart';
+import 'package:senger/utils/universal_variables.dart';
+import 'package:senger/widgets/custom_tile.dart';
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  FirebaseRepository _repository = FirebaseRepository();
+   final AuthMethods _authMethods = AuthMethods();
 
   List<User> userList;
   String query = "";
@@ -22,8 +22,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
 
-    _repository.getCurrentUser().then((FirebaseUser user) {
-      _repository.fetchAllUsers(user).then((List<User> list) {
+    _authMethods.getCurrentUser().then((FirebaseUser user) {
+      _authMethods.fetchAllUsers(user).then((List<User> list) {
         setState(() {
           userList = list;
         });
@@ -113,13 +113,13 @@ class _SearchScreenState extends State<SearchScreen> {
             ));
           },
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(searchedUser.profilePhoto),
+            backgroundImage: searchedUser.profilePhoto != null ? NetworkImage(searchedUser.profilePhoto) : NetworkImage("https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg"),
             backgroundColor: Colors.grey,
           ),
           title: Text(
             searchedUser.username,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -135,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UniversalVaribales.blackColor,
+      backgroundColor:Colors.white,
       appBar: searchAppBar(context),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),

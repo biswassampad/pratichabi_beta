@@ -2,20 +2,26 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/models/message.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/provider/image_upload_provider.dart';
-import 'package:pratichabi/resources/firebase_repository.dart';
-import 'package:pratichabi/screens/widgets/cached_image.dart';
-import 'package:pratichabi/utils/call_utilities.dart';
-import 'package:pratichabi/utils/permissions.dart';
-import 'package:pratichabi/utils/universal_variables.dart';
-import 'package:pratichabi/utils/utils.dart';
-import 'package:pratichabi/widgets/appbarr.dart';
-import 'package:pratichabi/widgets/custom_tile.dart';
+import 'package:senger/constants/menu.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/message.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/provider/image_upload_provider.dart';
+import 'package:senger/provider/user_provider.dart';
+import 'package:senger/resources/storage_methods.dart';
+import 'package:senger/resources/chat_methods.dart';
+import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/screens/widgets/cached_image.dart';
+import 'package:senger/screens/call_screens/pickup_layout.dart';
+import 'package:senger/utils/call_utilities.dart';
+import 'package:senger/utils/permissions.dart';
+import 'package:senger/utils/universal_variables.dart';
+import 'package:senger/utils/utils.dart';
+import 'package:senger/widgets/appbarr.dart';
+import 'package:senger/widgets/custom_tile.dart';
 import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -30,7 +36,10 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   
   TextEditingController textFieldController = TextEditingController();
-  FirebaseRepository _repository = FirebaseRepository();
+  final AuthMethods _authMethods = AuthMethods();
+   final StorageMethods _storageMethods = StorageMethods();
+    final ChatMethods _chatMethods = ChatMethods();
+    final UserProvider userProvider = UserProvider();
 
   ImageUploadProvider _imageUploadProvider;
 
@@ -42,12 +51,14 @@ class _MessageScreenState extends State<MessageScreen> {
 
   bool isWriting = false;
   bool showEmojiPicker = false;
+  bool isDownloading = false;
+  
 
   @override
   void initState() {
     super.initState();
 
-    _repository.getCurrentUser().then((user) {
+    _authMethods.getCurrentUser().then((user) {
       _currentUserId = user.uid;
 
       setState(() {
@@ -78,30 +89,32 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
-    return Scaffold(
-      backgroundColor: UniversalVaribales.blackColor,
-      appBar: customAppBar(context),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: messageList(),
-          ),
-          // _imageUploadProvider.getViewState == ViewState.LOADING ? 
-          // Container(
-          //   alignment: Alignment.centerRight,
-          //   margin: EdgeInsets.only(right:15),
-          //   child: CircularProgressIndicator()
-          //   ): Container(),
-          chatControls(),
-          showEmojiPicker ? Container(child:emojiContainer()):Container()
-        ],
+    return PickUpLayout(
+          scaffold: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: customAppBar(context),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messageList(),
+            ),
+            // _imageUploadProvider.getViewState == ViewState.LOADING ? 
+            // Container(
+            //   alignment: Alignment.centerRight,
+            //   margin: EdgeInsets.only(right:15),
+            //   child: CircularProgressIndicator()
+            //   ): Container(),
+            chatControls(),
+            showEmojiPicker ? Container(child:emojiContainer()):Container()
+          ],
+        ),
       ),
     );
   }
 
   emojiContainer(){
     return EmojiPicker(
-      bgColor: UniversalVaribales.separatorColor,
+      bgColor: Colors.white,
       indicatorColor: UniversalVaribales.blueColor,
       rows:3,
       columns:7,
@@ -117,15 +130,29 @@ class _MessageScreenState extends State<MessageScreen> {
 
    pickImage({@required ImageSource source}) async{
       File selctedImage = await Utils().pickImage(source:source);
-      _repository.uploadImage(
+      _storageMethods.uploadImage(
         image:selctedImage,
         recieverId:widget.reciever.uid,
         senderId:_currentUserId,
         imageUploadProvider:_imageUploadProvider,
+        type:'image'
       );
     }
 
+  pickFile() async{
+    File file = await FilePicker.getFile();
+    print(file);
+     _storageMethods.uploadImage(
+        image:file,
+        recieverId:widget.reciever.uid,
+        senderId:_currentUserId,
+        imageUploadProvider:_imageUploadProvider,
+        type:'file'
+      );
+  }
+
   Widget messageList() {
+    print('new message fetched');
     return StreamBuilder(
       stream: Firestore.instance
           .collection(MESSAGES_COLLECTION)
@@ -209,7 +236,7 @@ class _MessageScreenState extends State<MessageScreen> {
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
-        color: UniversalVaribales.recieverColor,
+        gradient: UniversalVaribales.msgGradient,
         borderRadius: BorderRadius.only(
           bottomRight: messageRadius,
           topRight: messageRadius,
@@ -234,7 +261,7 @@ class _MessageScreenState extends State<MessageScreen> {
       showModalBottomSheet(
           context: context,
           elevation: 0,
-          backgroundColor: UniversalVaribales.blackColor,
+          backgroundColor: Colors.white,
           builder: (context) {
             return Column(
               children: <Widget>[
@@ -245,6 +272,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       FlatButton(
                         child: Icon(
                           Icons.close,
+                          color: Colors.yellow[700],
                         ),
                         onPressed: () => Navigator.maybePop(context),
                       ),
@@ -254,7 +282,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           child: Text(
                             "Content and tools",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.yellow[900],
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -270,31 +298,28 @@ class _MessageScreenState extends State<MessageScreen> {
                         title: "Media",
                         subtitle: "Share Photos and Video",
                         icon: Icons.image,
-                        onTap:()=>pickImage(
-                           source:ImageSource.gallery
-                          )
+                        onTap:()=>{pickImage(
+                           source:ImageSource.gallery,
+                          ),
+                          Navigator.maybePop(context)
+                          
+                          }
                       ),
                       ModalTile(
                           title: "File",
                           subtitle: "Share files",
-                          icon: Icons.tab),
+                          icon: Icons.tab,
+                          onTap:()=>{
+                            pickFile(),
+                            Navigator.maybePop(context)
+                            }
+                          
+                          ),
                       ModalTile(
                           title: "Contact",
                           subtitle: "Share contacts",
                           icon: Icons.contacts),
-                      ModalTile(
-                          title: "Location",
-                          subtitle: "Share a location",
-                          icon: Icons.add_location),
-                      ModalTile(
-                          title: "Schedule Call",
-                          subtitle: "Arrange a skype call and get reminders",
-                          icon: Icons.schedule),
-                      ModalTile(
-                          title: "Create Poll",
-                          subtitle: "Share polls",
-                          icon: Icons.poll)
-                    ],
+                      ],
                   ),
                 ),
               ],
@@ -319,7 +344,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
       textFieldController.text = "";
 
-      _repository.addMessageToDb(_message, sender, widget.reciever);
+      _chatMethods.addMessageToDb(_message, sender, widget.reciever);
     }
 
    
@@ -352,7 +377,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 controller: textFieldController,
                 focusNode: textFieldFocus,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onChanged: (val) {
                   (val.length > 0 && val.trim() != "")
@@ -362,7 +387,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 decoration: InputDecoration(
                   hintText: "Type a message",
                   hintStyle: TextStyle(
-                    color: UniversalVaribales.greyColor,
+                    color: Colors.grey,
                   ),
                   border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
@@ -372,12 +397,17 @@ class _MessageScreenState extends State<MessageScreen> {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   filled: true,
-                  fillColor: UniversalVaribales.separatorColor,
+                  fillColor: Colors.grey[100],
                 ),
               ),
-              Positioned(
-                right: 0,
-                              child: IconButton(
+                ],
+            ),
+          ),
+          isWriting
+              ? Container()
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: IconButton(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   onPressed: (){
@@ -389,23 +419,14 @@ class _MessageScreenState extends State<MessageScreen> {
                       hideEmojiContainer();
                     }
                   },
-                  icon: Icon(Icons.face),
+                  icon: Icon(Icons.face,color: UniversalVaribales.gradientColorEnd),
                 ),
-              )
-                ],
-            ),
-          ),
-          isWriting
-              ? Container()
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.record_voice_over),
                 ),
           isWriting ? Container() : GestureDetector(
             onTap: ()=>pickImage(
               source:ImageSource.camera
               ),
-            child: Icon(Icons.camera_alt)
+            child: Icon(Icons.camera_alt,color: UniversalVaribales.gradientColorEnd,)
             ),
           isWriting
               ? Container(
@@ -428,13 +449,17 @@ class _MessageScreenState extends State<MessageScreen> {
 
   CustomAppBar customAppBar(context) {
     return CustomAppBar(
-      leading: IconButton(
+      leading: Row(
+        children: <Widget>[
+          IconButton(
         icon: Icon(
           Icons.arrow_back,
         ),
         onPressed: () {
           Navigator.pop(context);
         },
+      ),
+        ],
       ),
       centerTitle: false,
       title: Text(
@@ -452,14 +477,23 @@ class _MessageScreenState extends State<MessageScreen> {
             context: context
           ) : {},
         ),
-        IconButton(
-          icon: Icon(
-            Icons.phone,
-          ),
-          onPressed: () {},
+        PopupMenuButton<String>(
+          onSelected:choiceActions,
+          itemBuilder: (BuildContext context){
+            return Constants.choices.map((String choice){
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
         )
       ],
     );
+  }
+
+  void choiceActions(String choice){
+    print('working $choice');
   }
 }
 
@@ -493,7 +527,7 @@ class ModalTile extends StatelessWidget {
           padding: EdgeInsets.all(10),
           child: Icon(
             icon,
-            color: UniversalVaribales.greyColor,
+            color: Colors.yellow,
             size: 38,
           ),
         ),
@@ -508,7 +542,7 @@ class ModalTile extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 18,
           ),
         ),
