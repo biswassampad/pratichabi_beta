@@ -4,6 +4,15 @@ import 'package:senger/utils/universal_variables.dart';
 
 
 class QuietBox extends StatelessWidget {
+  
+  final String header;
+  final String bodytext;
+
+  const QuietBox({
+    Key key, 
+    @required this.header, 
+    @required this.bodytext,
+    }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

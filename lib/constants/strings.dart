@@ -7,3 +7,7 @@ const String CALL_COLLECTION = "calls";
 const String CONTACTS_COLLECTION = "contacts";
 const String TEXT_TYPE = "text";
 const String FILE_TYPE ="file";
+const String CALL_STATUS_DIALED = "dialed";
+const String CALL_STATUS_RECIEVED = "received";
+const String CALL_STATUS_MISSED = "missed";
+const String CALL_STATUS_REJECTED = "rejected";

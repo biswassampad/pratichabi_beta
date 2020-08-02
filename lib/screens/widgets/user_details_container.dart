@@ -24,7 +24,12 @@ class UserDetailsContainer extends StatelessWidget {
                FlatButton(
                  onPressed: ()=>signOut(),
                  child: Text('Sign Out',
-                 style: TextStyle(color:Colors.white,fontSize: 12),
+                 style: TextStyle(
+                   color:Colors.white,
+                   fontSize: 15,
+                   fontWeight: FontWeight.bold,
+                   fontFamily: 'Open Sans'
+                   ),
                  
                  )
                  )

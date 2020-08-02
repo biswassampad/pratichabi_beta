@@ -1,14 +1,68 @@
+import 'dart:io';
+
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:senger/models/logs.dart';
+import '../interface/log_interface.dart';
 
-abstract class LogInterface{
-  init();
+class HiveMethods implements LogInterface {
+  String hive_box = "";
 
-  addLogs(Log log);
+  @override
+  openDb(dbName) =>(hive_box=dbName);
 
-  // returns a list of logs
-  Future<List<Log>> getLogs();
+  @override
+  init() async {
+    Directory dir = await getApplicationDocumentsDirectory();
+    Hive.init(dir.path);
+  }
 
-  deleteLogs(int logId);
+  @override
+  addLogs(Log log) async {
+    var box = await Hive.openBox(hive_box);
 
-  close();
+    var logMap = log.toMap(log);
+
+    // box.put("custom_key", logMap);
+    int idOfInput = await box.add(logMap);
+
+    close();
+
+    return idOfInput;
+  }
+
+  updateLogs(int i, Log newLog) async {
+    var box = await Hive.openBox(hive_box);
+
+    var newLogMap = newLog.toMap(newLog);
+
+    box.putAt(i, newLogMap);
+
+    close();
+  }
+
+  @override
+  Future<List<Log>> getLogs() async {
+    var box = await Hive.openBox(hive_box);
+
+    List<Log> logList = [];
+
+    for (int i = 0; i < box.length; i++) {
+      var logMap = box.getAt(i);
+
+      logList.add(Log.fromMap(logMap));
+    }
+    return logList;
+  }
+
+  @override
+  deleteLogs(int logId) async {
+    var box = await Hive.openBox(hive_box);
+
+    await box.deleteAt(logId);
+    // await box.delete(logId);
+  }
+
+  @override
+  close() => Hive.close();
 }

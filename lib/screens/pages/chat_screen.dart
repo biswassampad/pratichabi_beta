@@ -9,26 +9,24 @@ import 'package:senger/screens/widgets/shrimmering_logo_two.dart';
 import 'package:senger/screens/widgets/user_circle.dart';
 import 'package:senger/widgets/appbarr.dart';
 import 'package:provider/provider.dart';
+import 'package:senger/widgets/log_appbar.dart';
 
 class ChatScreen extends StatelessWidget{
 
-  CustomAppBar customAppBar(BuildContext context){
-    return CustomAppBar(
-      title: UserCircle(), 
-      actions: <Widget>[
-        IconButton(icon: Icon(Icons.add_comment,color:Colors.white), onPressed: (){
-          Navigator.pushNamed(context, '/search_screen');
-        }),
-      ], 
-      leading: ShimmeringLogoTwo(), 
-      centerTitle: true);
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:Colors.white,
-      appBar:customAppBar(context), 
+      appBar:LogAppBar(
+        title:UserCircle(),
+        actions:<Widget>[
+        IconButton(icon: Icon(Icons.add_comment,color:Colors.white), onPressed: (){
+          Navigator.pushNamed(context, '/search_screen');
+        }),
+      ],
+      ), 
       body: ChatListContainer(),
     );
   }
@@ -51,7 +49,10 @@ class ChatListContainer extends StatelessWidget {
             var docList = snapshot.data.documents;
 
             if(docList.isEmpty){
-              return QuietBox();
+              return QuietBox(
+                 header: "This is where your all chats will show", 
+                bodytext: "Send messages to your friends and famiily without any extra cost"
+              );
             }
             return ListView.builder(
             padding:EdgeInsets.all(10),

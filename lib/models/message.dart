@@ -7,6 +7,7 @@ class Message {
   String message;
   Timestamp timestamp;
   String photoUrl;
+  bool status = true;
 
   Message({
     this.senderId,
@@ -14,6 +15,7 @@ class Message {
     this.type,
     this.message,
     this.timestamp,
+    this.status
   });
   // will be called only in messages contain images 
   Message.imageMessage({
@@ -22,7 +24,8 @@ class Message {
     this.message,
     this.type,
     this.timestamp,
-    this.photoUrl
+    this.photoUrl,
+    this.status
   });
 
   Map toMap(){
@@ -32,6 +35,7 @@ class Message {
     map['type'] = this.type;
     map['message'] = this.message;
     map['timestamp'] = this.timestamp;
+    map['status'] = this.status;
     return map;
   }
 
@@ -43,6 +47,7 @@ class Message {
     map['message'] = this.message;
     map['timestamp'] = this.timestamp;
     map['photoUrl'] = this.photoUrl;
+    map['status'] = this.status;
     return map;
   }
 
@@ -53,6 +58,7 @@ class Message {
       this.message = map['message'];
       this.timestamp = map['timeStamp'];
       this.photoUrl = map['photoUrl'];
+      this.status = map['status'];
   }
 
 }

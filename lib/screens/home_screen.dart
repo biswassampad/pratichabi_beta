@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:senger/provider/user_provider.dart';
 import 'package:senger/resources/auth_methods.dart';
+import 'package:senger/resources/localdb/repository/log_respository.dart';
 import 'package:senger/screens/call_screens/pickup_layout.dart';
 import 'package:senger/screens/pages/contact_screen.dart';
 import 'package:senger/screens/pages/log_screen.dart';
@@ -36,7 +37,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         userId: userProvider.getUser.uid,
         userState: UserState.Online, 
       );
-
+      LogRepository.init(
+        isHive: false,
+        dbName: userProvider.getUser.uid
+        );
      });
 
     WidgetsBinding.instance.addObserver(this);
