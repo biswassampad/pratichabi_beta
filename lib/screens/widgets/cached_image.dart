@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
   import 'package:flutter/material.dart';
+import 'package:senger/screens/pages/image_screen.dart';
 
   class CachedImage extends StatelessWidget {
     final String imageUrl;
@@ -25,23 +26,37 @@ import 'package:cached_network_image/cached_network_image.dart';
     @override
     Widget build(BuildContext context) {
       try {
-        return SizedBox(
-          height: isRound ? radius : height,
-          width: isRound ? radius : width,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(isRound ? 50 : radius),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: fit,
-                placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) =>
-                    Image.network(noImageAvailable, fit: BoxFit.cover),
-              )),
+        return GestureDetector(
+            onTap:(){viewImage(imageUrl,context);} ,
+            child: SizedBox(
+            height: isRound ? radius : height,
+            width: isRound ? radius : width,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(isRound ? 50 : radius),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: fit,
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) =>
+                      Image.network(noImageAvailable, fit: BoxFit.cover),
+                )),
+          ),
         );
       } catch (e) {
         print(e);
         return Image.network(noImageAvailable, fit: BoxFit.cover);
       }
+    }
+
+    viewImage(String imageUrl,BuildContext  context){
+      print('image url');
+      print(imageUrl);
+      Navigator.push(context, 
+        MaterialPageRoute(
+          builder: (context)=> ImageViewer(imageUrl: imageUrl,)
+        )
+      
+      );
     }
   }

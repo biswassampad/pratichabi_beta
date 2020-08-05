@@ -5,6 +5,7 @@ import 'package:senger/provider/user_provider.dart';
 import 'package:senger/resources/auth_methods.dart';
 import 'package:senger/screens/home_screen.dart';
 import 'package:senger/screens/login_screen.dart';
+import 'package:senger/screens/pages/image_screen.dart';
 import 'package:senger/screens/pages/search_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         initialRoute: "/",
         routes: {
           '/search_screen':(context)=>SearchScreen(),
+          '/image_viewer':(context)=>ImageViewer(),
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,

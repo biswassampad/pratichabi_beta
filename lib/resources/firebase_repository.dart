@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:pratichabi/models/message.dart';
-import 'package:pratichabi/resources/firebase_methods.dart';
+import 'package:senger/models/message.dart';
+import 'package:senger/resources/firebase_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/provider/image_upload_provider.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/provider/image_upload_provider.dart';
 
 class FirebaseRepository{
   FirebaseMethods _firebaseMethods = FirebaseMethods(); 

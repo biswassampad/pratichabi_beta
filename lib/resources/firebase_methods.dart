@@ -5,11 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pratichabi/constants/strings.dart';
-import 'package:pratichabi/models/message.dart';
-import 'package:pratichabi/models/user.dart';
-import 'package:pratichabi/utils/utils.dart';
-import 'package:pratichabi/provider/image_upload_provider.dart';
+import 'package:senger/constants/strings.dart';
+import 'package:senger/models/message.dart';
+import 'package:senger/models/user.dart';
+import 'package:senger/utils/utils.dart';
+import 'package:senger/provider/image_upload_provider.dart';
 
 class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;

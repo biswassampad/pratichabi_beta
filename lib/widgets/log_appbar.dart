@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senger/screens/widgets/shimmering_logo.dart';
 import 'package:senger/widgets/appbarr.dart';
 
 class LogAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -24,10 +25,7 @@ class LogAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         ): title,
       actions: actions, 
-      leading: Icon(
-        Icons.notifications,
-        color:Colors.white
-        ), 
+      leading: ShimmeringLogo(), 
       centerTitle: true
       );
   }
